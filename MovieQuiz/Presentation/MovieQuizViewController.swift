@@ -56,6 +56,13 @@ final class MovieQuizViewController: UIViewController {
         ),
     ]
 
+    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var textLabel: UILabel!
+    @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var noButtonOutlet: UIButton!
+    @IBOutlet private weak var yesButtonOutlet: UIButton!
+    @IBOutlet private weak var questionTitleLabel: UILabel!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -64,6 +71,9 @@ final class MovieQuizViewController: UIViewController {
         textLabel.font = .ysDisplayBold(size: 23)
         yesButtonOutlet.titleLabel?.font = .ysDisplayMedium(size: 20)
         noButtonOutlet.titleLabel?.font = .ysDisplayMedium(size: 20)
+
+        imageView.layer.cornerRadius = 20
+        imageView.layer.masksToBounds = true
 
         let currentQuestion = questions[currentQuestionIndex]
         show(quiz: convert(model: currentQuestion))
@@ -85,17 +95,22 @@ final class MovieQuizViewController: UIViewController {
         textLabel.text = step.question
         imageView.image = step.image
         counterLabel.text = step.questionNumber
+
+        yesButtonOutlet.isEnabled = true
+        noButtonOutlet.isEnabled = true
     }
 
     private func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
             correctAnswers += 1
         }
-        imageView.layer.masksToBounds = true
+
+        yesButtonOutlet.isEnabled = false
+        noButtonOutlet.isEnabled = false
+
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor =
             isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-        imageView.layer.cornerRadius = 20
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
@@ -140,15 +155,8 @@ final class MovieQuizViewController: UIViewController {
 
         alert.addAction(action)
 
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
-
-    @IBOutlet private weak var imageView: UIImageView!
-    @IBOutlet private weak var textLabel: UILabel!
-    @IBOutlet private weak var counterLabel: UILabel!
-    @IBOutlet private weak var noButtonOutlet: UIButton!
-    @IBOutlet private weak var yesButtonOutlet: UIButton!
-    @IBOutlet private weak var questionTitleLabel: UILabel!
 
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         let currentQuestion = questions[currentQuestionIndex]
